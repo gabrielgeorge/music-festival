@@ -27,7 +27,7 @@ describe('DataService', () => {
     expect(sut).toBeTruthy();
   });
 
-  it('should return Observable<FestivalModel[]>', () => {
+  it('should return correct data to the observable', () => {
     // Arrange
     const dummyData: FestivalModel[] = [
       {
@@ -69,7 +69,21 @@ describe('DataService', () => {
     });
 
     // Assert
+    const req = httpMock.expectOne(`${sut.baseUrl}/api/v1/festivals`);
+    expect(req.request.method).toBe('GET');
+    req.flush(dummyData);
+  });
 
+  it('should handle empty data return correctly', () => {
+    // Arrange
+    const dummyData: FestivalModel[] = [];
+
+    // Act
+    sut.getFestivals().subscribe((fest) => {
+      expect(fest.length).toEqual(0);
+    });
+
+    // Assert
     const req = httpMock.expectOne(`${sut.baseUrl}/api/v1/festivals`);
     expect(req.request.method).toBe('GET');
     req.flush(dummyData);
