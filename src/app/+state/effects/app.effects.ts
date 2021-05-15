@@ -4,6 +4,7 @@ import { DataService } from 'src/app/services/data.service';
 import * as appActions from '../actions/app.actions';
 import { catchError, map, switchMap } from 'rxjs/operators';
 import { of } from 'rxjs';
+import { festivalsResponseToEntitiesMapper } from 'src/app/helper/data.mapper';
 
 @Injectable()
 export class AppEffects {
@@ -12,7 +13,15 @@ export class AppEffects {
       ofType(appActions.getFestivals),
       switchMap(() =>
         this.dataService.getFestivals().pipe(
-          map((response) => appActions.getFestivalsSuccess({ response })),
+          map((response) => {
+            const { bands, festivals, records } =
+              festivalsResponseToEntitiesMapper(response);
+            return appActions.getFestivalsSuccess({
+              bands,
+              records,
+              festivals,
+            });
+          }),
           catchError(() => of(appActions.getFestivalsFailure()))
         )
       )
