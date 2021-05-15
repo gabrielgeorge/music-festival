@@ -9,11 +9,14 @@ import * as fromApp from '../../+state/selectors/app.selectors';
   styleUrls: ['./music-record-visualizer.component.scss'],
 })
 export class MusicRecordVisualizerComponent implements OnInit {
-  data$: Observable<any>;
   constructor(private store: Store) {}
+  public data$: Observable<any> | undefined;
 
   ngOnInit(): void {
     this.store.dispatch(appActions.getFestivals());
     this.data$ = this.store.select(fromApp.selectRecordsInTreeForm);
+    this.data$.subscribe(x=> {
+      console.log(x)
+    })
   }
 }
