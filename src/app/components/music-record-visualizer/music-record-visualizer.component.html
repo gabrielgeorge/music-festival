@@ -1,1 +1,27 @@
-<p>music-record-visualizer works!</p>
+<h1>Music Record Tree</h1>
+<div>
+  <ng-container *ngIf="!(isLoading$ | async)">
+    <ng-container *ngIf="data$ | async as data; else noData">
+      <ul class="list-unstyled" *ngFor="let record of data">
+        <li>
+          <h5>{{record.recordName}}</h5>
+          <ul>
+            <li *ngFor="let band of record.bands">
+              <label>{{band.bandName}}</label>
+              <ul>
+                <li *ngFor="let festival of band.festivalsAttended">
+                  {{festival}}
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </ng-container>
+  </ng-container>
+</div>
+
+
+<ng-template #noData>
+  <h5>Unfotunately no data is found. Please try again.</h5>
+</ng-template>
