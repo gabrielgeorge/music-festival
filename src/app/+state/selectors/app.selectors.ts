@@ -15,35 +15,29 @@ export const selectAppState = createFeatureSelector<AppState>('app');
 
 export const selectIsLoadingFestival = createSelector(
   selectAppState,
-  (state) => state.isLoadingFestival
+  (state): boolean => state.isLoadingFestival
 );
 
 export const selectFestivalFlattenedRecord = createSelector(
   selectAppState,
-  (state): BandRecordFestivalFlattenedModel[] | undefined => {
+  (state): BandRecordFestivalFlattenedModel[] => {
     if (state && state.festivals) {
       return festivalResponseToFlattenedDataMapper(state.festivals);
     }
-    return undefined;
+    return [];
   }
 );
 
 export const selectRecordBandFestivalDictionary = createSelector(
   selectFestivalFlattenedRecord,
-  (state): BandRecordFestivalDictionaryModel | undefined => {
-    if (state) {
-      return flattenedDataToDictionaryModelMapper(state);
-    }
-    return undefined;
+  (flattenedRecords): BandRecordFestivalDictionaryModel => {
+    return flattenedDataToDictionaryModelMapper(flattenedRecords);
   }
 );
 
 export const selectRecordsInTreeForm = createSelector(
   selectRecordBandFestivalDictionary,
   (records): MusicRecordVisualizerViewModel[] => {
-    if (records) {
-      return bandRecordFestivalDictionaryToViewModel(records);
-    }
-    return [];
+    return bandRecordFestivalDictionaryToViewModel(records);
   }
 );

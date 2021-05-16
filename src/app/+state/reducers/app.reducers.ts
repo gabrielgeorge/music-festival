@@ -18,13 +18,11 @@ const appReducer = createReducer(
     ...state,
     isLoadingFestival: true,
   })),
-  on(appActions.getFestivalsSuccess, (state, action) => {
-    return {
-      ...state,
-      festivals: action.response,
-      isLoadingFestival: false,
-    };
-  }),
+  on(appActions.getFestivalsSuccess, (state, action) => ({
+    ...state,
+    festivals: action.response,
+    isLoadingFestival: false,
+  })),
   on(appActions.getFestivalsFailure, (state) => ({
     ...state,
     isLoadingFestival: false,
