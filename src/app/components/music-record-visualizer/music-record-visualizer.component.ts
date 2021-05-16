@@ -20,6 +20,6 @@ export class MusicRecordVisualizerComponent implements OnInit {
     this.isLoading$ = this.store.select(fromApp.selectIsLoadingFestival);
     this.data$ = this.store
       .select(fromApp.selectRecordsInTreeForm)
-      .pipe(filter((x) => !!x && !!x.length));
+      .pipe(filter((records) => records?.length > 0));
   }
 }

@@ -8,7 +8,6 @@ import {
   BandRecordFestivalDictionaryModel,
 } from '../models/record.model';
 import { groupBy } from 'lodash-es';
-import { Dictionary } from '../models/dictionary.model';
 
 export function festivalResponseToFlattenedDataMapper(
   festivalResponse: FestivalResponseModel[]
@@ -53,7 +52,7 @@ export function bandRecordFestivalDictionaryToViewModel(
             a.toLocaleLowerCase() > b.toLocaleLowerCase() ? 1 : -1
           )
           .reduce((bandsAcc, bandsCurr) => {
-            let bandRecord: Dictionary<MusicRecordBandVisualizerModel> = {};
+            let bandRecord: Record<string, MusicRecordBandVisualizerModel> = {};
             currentRecord[bandsCurr].forEach((b) => {
               const festivalsAttended: string[] = bandRecord[b.bandName]
                 ?.festivalsAttended
@@ -95,96 +94,3 @@ export function bandRecordFestivalDictionaryToViewModel(
       return acc;
     }, [] as MusicRecordVisualizerViewModel[]);
 }
-
-// export function festivalsResponseToEntitiesMapper(
-//   festivalResponse: FestivalResponseModel[]
-// ): { festivals: Festivals; bands: Bands; records: Records } {
-//   let festivals: Festivals = {};
-//   let bands: Bands = {};
-//   let records: Records = {};
-
-//   if (festivalResponse) {
-//     festivalResponse.forEach((festival) => {
-//       festivals[festival.name] = {
-//         ...festivals[festival.name],
-//         festivalName: festival.name ?? '',
-//       };
-
-//       if (festival.bands) {
-//         festival.bands.forEach((band) => {
-//           bands[band.name] = {
-//             ...bands[band.name],
-//             bandName: band.name,
-//             festivals: bands[band.name]?.festivals
-//               ? {
-//                   ...bands[band.name].festivals,
-//                 }
-//               : {},
-//           };
-
-//           bands[band.name].festivals[festival.name] = festivals[festival.name];
-
-//           records[band.recordLabel] = {
-//             ...records[band.recordLabel],
-//             recordName: band.recordLabel,
-//             bands: records[band.recordLabel]?.bands
-//               ? { ...records[band.recordLabel].bands }
-//               : {},
-//           };
-
-//           records[band.recordLabel].bands[band.name] = bands[band.name];
-//         });
-//       }
-//     });
-//   }
-
-//   return { festivals, bands, records };
-// }
-
-// export function musicRecordVisualizerMapper(
-//   festivals: Festivals,
-//   bands: Bands,
-//   records: Records
-// ): MusicRecordVisualizerViewModel[] {
-//   let data = Object.keys(records)
-//     .sort()
-//     .reduce((recordAcc, recordCurr) => {
-//       let currentRecord = records[recordCurr];
-//       let record: MusicRecordVisualizerViewModel = {
-//         recordName: currentRecord?.recordName
-//           ? currentRecord.recordName
-//           : '[NO RECORD LABEL]',
-
-//         bands: Object.keys(currentRecord.bands)
-//           .sort()
-//           .reduce((bandsAcc, bandsCurr) => {
-//             let currentBand = bands[bandsCurr];
-
-//             if (currentBand) {
-//               let band: MusicRecordBandVisualizerModel = {
-//                 bandName: currentBand.bandName,
-//                 festivalsAttended:
-//                   Object.keys(currentBand.festivals)
-//                     .filter((x) => !!x)
-//                     .map((x) => festivals[x].festivalName)
-//                     .sort()
-//                     .reduce((festivalAcc, festivalCurr) => {
-//                       if (festivalCurr) {
-//                         festivalAcc.push(festivalCurr);
-//                       }
-//                       return festivalAcc;
-//                     }, [] as string[]) ?? [],
-//               };
-
-//               bandsAcc.push(band);
-//             }
-
-//             return bandsAcc;
-//           }, [] as MusicRecordBandVisualizerModel[]),
-//       };
-//       recordAcc.push(record);
-//       return recordAcc;
-//     }, [] as MusicRecordVisualizerViewModel[]);
-
-//   return data;
-// }
