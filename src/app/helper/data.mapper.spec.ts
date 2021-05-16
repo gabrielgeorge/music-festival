@@ -1,5 +1,10 @@
+import { MusicRecordVisualizerViewModel } from '../components/music-record-visualizer/music-record-visualizer.model';
 import { FestivalResponseModel } from '../models/festival-response.model';
-import { festivalsResponseToEntitiesMapper } from './data.mapper';
+import { Bands, Festivals, Records } from '../models/record.model';
+import {
+  festivalsResponseToEntitiesMapper,
+  musicRecordVisualizerMapper,
+} from './data.mapper';
 
 describe('DataMapper', () => {
   describe('festivalsResponseToEntitiesMapper', () => {
@@ -258,7 +263,178 @@ describe('DataMapper', () => {
       expect(Object.keys(bands).length).toBe(16);
       expect(Object.keys(festivals).length).toBe(5);
       expect(Object.keys(records).length).toBe(11);
+    });
+  });
 
+  describe('musicRecordVisualizerMapper', () => {
+    it('should fail gracefully if the input is empty object', () => {
+      // arrange
+      const festivals: Festivals = {};
+      const bands: Bands = {};
+      const records: Records = {};
+
+      // act
+      let sut = musicRecordVisualizerMapper(festivals, bands, records);
+
+      // assert
+      expect(sut).toBeDefined();
+      expect(sut).toEqual([]);
+    });
+
+    it('should still provide festivals despite bands and records are empty', () => {
+      // arrange
+      const festivals: Festivals = {
+        A: { festivalName: 'A', bands: {} },
+        B: { festivalName: 'B', bands: {} },
+        C: { festivalName: 'C', bands: {} },
+      };
+      const bands: Bands = {};
+      const records: Records = {};
+
+      // act
+      const sut = musicRecordVisualizerMapper(festivals, bands, records);
+
+      // assert
+      expect(sut).toBeDefined();
+      expect(sut).toEqual([]);
+    });
+
+    it('should map each of the object correctly', () => {
+      // arrange
+      const festivals: Festivals = {
+        'Small Night In': {
+          festivalName: 'Small Night In',
+          bands: {
+            'The Black Dashes': { bandName: 'The Black Dashes' },
+            'Yanke East': { bandName: 'Yanke East' },
+          },
+        },
+        'LOL-palooza': {
+          festivalName: 'LOL-palooza',
+          bands: {
+            'The Black Dashes': { bandName: 'The Black Dashes' },
+            'My Mates': { bandName: 'My Mates' },
+          },
+        },
+      };
+      const bands: Bands = {
+        'The Black Dashes': { bandName: 'The Black Dashes' },
+        'Yanke East': { bandName: 'Yanke East' },
+        'My Mates': { bandName: 'My Mates' },
+      };
+      const records: Records = {
+        'Fourth Woman Records': {
+          recordName: 'Fourth Woman Records',
+          bands: { 'The Black Dashes': { bandName: 'The Black Dashes' } },
+        },
+        'MEDIOCRE Music': {
+          recordName: 'MEDIOCRE Music',
+          bands: { 'Yanke East': { bandName: 'Yanke East' } },
+        },
+        'My 80s Record': {
+          recordName: 'My 80s Record',
+          bands: {
+            'My Mates': { bandName: 'My Mates' },
+          },
+        },
+      };
+
+      const expected: MusicRecordVisualizerViewModel[] = [
+        {
+          recordName: 'Fourth Woman Records',
+          bands: [
+            {
+              bandName: 'The Black Dashes',
+              festivalsAttended: ['LOL-palooza', 'Small Night In'],
+            },
+          ],
+        },
+        {
+          recordName: 'MEDIOCRE Music',
+          bands: [
+            { bandName: 'Yanke East', festivalsAttended: ['Small Night In'] },
+          ],
+        },
+        {
+          recordName: 'My 80s Record',
+          bands: [{ bandName: 'My Mates', festivalsAttended: ['LOL-palooza'] }],
+        },
+      ];
+
+      // act
+      const sut = musicRecordVisualizerMapper(festivals, bands, records);
+
+      // assert
+      expect(sut).toBeDefined();
+      expect(sut).toEqual(expected);
+    });
+
+    it('should sort the value alphabetically', () => {
+      // arrange
+      const festivals: Festivals = {
+        festZ: {
+          festivalName: 'festZ',
+          bands: {
+            bandC: { bandName: 'bandC' },
+            bandB: { bandName: 'bandB' },
+          },
+        },
+        festA: {
+          festivalName: 'festA',
+          bands: {
+            bandA: { bandName: 'bandA' },
+            bandB: { bandName: 'bandB' },
+          },
+        },
+      };
+      const bands: Bands = {
+        bandB: { bandName: 'bandB' },
+        bandC: { bandName: 'bandC' },
+        bandA: { bandName: 'bandA' },
+      };
+      const records: Records = {
+        RB: {
+          recordName: 'RB',
+          bands: { bandC: { bandName: 'bandC' } },
+        },
+        RC: {
+          recordName: 'RC',
+          bands: {
+            bandB: { bandName: 'bandB' },
+          },
+        },
+        RA: {
+          recordName: 'RA',
+          bands: { bandA: { bandName: 'bandA' } },
+        },
+      };
+
+      const expected: MusicRecordVisualizerViewModel[] = [
+        {
+          recordName: 'RA',
+          bands: [
+            {
+              bandName: 'bandA',
+              festivalsAttended: ['festA'],
+            },
+          ],
+        },
+        {
+          recordName: 'RB',
+          bands: [{ bandName: 'bandC', festivalsAttended: ['festZ'] }],
+        },
+        {
+          recordName: 'RC',
+          bands: [{ bandName: 'bandB', festivalsAttended: ['festA', 'festZ'] }],
+        },
+      ];
+
+      // act
+      const sut = musicRecordVisualizerMapper(festivals, bands, records);
+
+      // assert
+      expect(sut).toBeDefined();
+      expect(sut).toEqual(expected);
     });
   });
 });

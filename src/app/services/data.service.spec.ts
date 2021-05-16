@@ -3,7 +3,6 @@ import {
   HttpTestingController,
 } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { FestivalResponseModel } from '../models/festival-response.model';
 import { DataService } from './data.service';
 
 describe('DataService', () => {
