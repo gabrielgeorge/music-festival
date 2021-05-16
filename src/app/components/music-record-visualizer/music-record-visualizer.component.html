@@ -4,7 +4,7 @@
     <ng-container *ngIf="data$ | async as data; else noData">
       <ul class="list-unstyled" *ngFor="let record of data">
         <li>
-          <h5>{{record?.recordName ? record.recordName : '[NO RECORD LABEL]'}}</h5>
+          <h5>{{record.recordName || '[NO RECORD LABEL]'}}</h5>
           <ul class="band-list">
             <li *ngFor="let band of record.bands">
               <label>{{band.bandName}}</label>
