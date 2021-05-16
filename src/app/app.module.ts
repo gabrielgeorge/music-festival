@@ -1,14 +1,13 @@
+import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
-import { AppComponent } from './app.component';
-import { StoreModule } from '@ngrx/store';
-import { reducers, metaReducers } from './+state/reducers';
 import { EffectsModule } from '@ngrx/effects';
+import { StoreModule } from '@ngrx/store';
+import { optionalModules } from 'src/environments/optional-modules';
 import { AppEffects } from './+state/effects/app.effects';
+import { metaReducers, reducers } from './+state/reducers';
+import { AppComponent } from './app.component';
 import { MusicRecordVisualizerComponent } from './components/music-record-visualizer/music-record-visualizer.component';
-import { HttpClientModule } from '@angular/common/http';
-import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 
 @NgModule({
   declarations: [AppComponent, MusicRecordVisualizerComponent],
@@ -19,9 +18,7 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
       metaReducers,
     }),
     EffectsModule.forRoot([AppEffects]),
-    StoreDevtoolsModule.instrument({
-      maxAge: 25, // Retains last 25 states
-    }),
+    ...optionalModules,
   ],
   providers: [],
   bootstrap: [AppComponent],

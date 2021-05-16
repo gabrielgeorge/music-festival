@@ -39,6 +39,10 @@
             "production": {
               "fileReplacements": [
                 {
+                  "replace": "src/environments/optional-modules.ts",
+                  "with": "src/environments/optional-modules.prod.ts"
+                },
+                {
                   "replace": "src/environments/environment.ts",
                   "with": "src/environments/environment.prod.ts"
                 }
