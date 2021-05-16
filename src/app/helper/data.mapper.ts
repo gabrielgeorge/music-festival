@@ -18,24 +18,26 @@ export function festivalsResponseToEntitiesMapper(
           : {},
       };
 
-      festival.bands.forEach((band) => {
-        bands[band.name] = {
-          ...bands[band.name],
-          bandName: band.name,
-        };
+      if (festival.bands) {
+        festival.bands.forEach((band) => {
+          bands[band.name] = {
+            ...bands[band.name],
+            bandName: band.name,
+          };
 
-        festivals[festival.name].bands[band.name] = bands[band.name];
+          festivals[festival.name].bands[band.name] = bands[band.name];
 
-        records[band.recordLabel] = {
-          ...records[band.recordLabel],
-          recordName: band.recordLabel,
-          bands: records[band.recordLabel]?.bands
-            ? { ...records[band.recordLabel].bands }
-            : {},
-        };
+          records[band.recordLabel] = {
+            ...records[band.recordLabel],
+            recordName: band.recordLabel,
+            bands: records[band.recordLabel]?.bands
+              ? { ...records[band.recordLabel].bands }
+              : {},
+          };
 
-        records[band.recordLabel].bands[band.name] = bands[band.name];
-      });
+          records[band.recordLabel].bands[band.name] = bands[band.name];
+        });
+      }
     });
   }
 

@@ -17,16 +17,19 @@ export class DataService {
             return [];
           }
           return festivals.map((festival) => {
+            const bands = [...festival.bands];
+
             festival.name = festival.name ?? '';
-            if (festival.bands && festival.bands.length) {
-              festival.bands.map((band) => ({
+            festival.bands = [];
+
+            if (bands && bands.length) {
+              festival.bands = bands.map((band: any) => ({
                 ...band,
                 name: band.name ?? '',
-                recordLabel: band.recordLabel ?? '',
+                recordLabel: band?.recordLabel ? band.recordLabel : '',
               }));
-            } else {
-              festival.bands = [];
             }
+
             return festival;
           });
         })

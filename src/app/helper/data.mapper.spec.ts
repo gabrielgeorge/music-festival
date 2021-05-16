@@ -202,5 +202,63 @@ describe('DataMapper', () => {
         },
       });
     });
+
+    it('should have the right object key sizes', () => {
+      const resp: FestivalResponseModel[] = [
+        {
+          name: 'LOL-palooza',
+          bands: [
+            { name: 'Frank Jupiter', recordLabel: 'Pacific Records' },
+            { name: 'Werewolf Weekday', recordLabel: 'XS Recordings' },
+            { name: 'Winter Primates', recordLabel: '' },
+            { name: 'Jill Black', recordLabel: 'Fourth Woman Records' },
+          ],
+        },
+        {
+          name: 'Trainerella',
+          bands: [
+            { name: 'Manish Ditch', recordLabel: 'ACR' },
+            { name: 'Adrian Venti', recordLabel: 'Monocracy Records' },
+            { name: 'YOUKRANE', recordLabel: 'Anti Records' },
+            { name: 'Wild Antelope', recordLabel: 'Still Bottom Records' },
+          ],
+        },
+        {
+          name: 'Small Night In',
+          bands: [
+            { name: 'Wild Antelope', recordLabel: 'Marner Sis. Recording' },
+            { name: 'The Black Dashes', recordLabel: 'Fourth Woman Records' },
+            { name: 'Squint-281', recordLabel: 'Outerscope' },
+            {
+              name: 'Green Mild Cold Capsicum',
+              recordLabel: 'Marner Sis. Recording',
+            },
+            { name: 'Yanke East', recordLabel: 'MEDIOCRE Music' },
+          ],
+        },
+        {
+          name: 'Twisted Tour',
+          bands: [
+            { name: 'Summon', recordLabel: 'Outerscope' },
+            { name: 'Auditones', recordLabel: 'Marner Sis. Recording' },
+            { name: 'Squint-281', recordLabel: '' },
+          ],
+        },
+        {
+          name: '',
+          bands: [
+            { name: 'Propeller', recordLabel: 'Pacific Records' },
+            { name: 'Critter Girls', recordLabel: 'ACR' },
+          ],
+        },
+      ];
+      const { bands, festivals, records } =
+        festivalsResponseToEntitiesMapper(resp);
+
+      expect(Object.keys(bands).length).toBe(16);
+      expect(Object.keys(festivals).length).toBe(5);
+      expect(Object.keys(records).length).toBe(11);
+
+    });
   });
 });
