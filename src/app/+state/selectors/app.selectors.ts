@@ -1,10 +1,14 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
+import { MusicRecordVisualizerViewModel } from '../../components/music-record-visualizer/music-record-visualizer.model';
 import {
-  MusicRecordBandVisualizerModel,
-  MusicRecordVisualizerViewModel,
-} from 'src/app/components/music-record-visualizer/music-record-visualizer.model';
-import { musicRecordVisualizerMapper } from 'src/app/helper/data.mapper';
-import { Bands, Festivals, Records } from 'src/app/models/record.model';
+  festivalResponseToFlattenedDataMapper,
+  flattenedDataToDictionaryModelMapper,
+  bandRecordFestivalDictionaryToViewModel,
+} from '../../helper/data.mapper';
+import {
+  BandRecordFestivalDictionaryModel,
+  BandRecordFestivalFlattenedModel,
+} from '../../models/record.model';
 import { AppState } from '../reducers/app.reducers';
 
 export const selectAppState = createFeatureSelector<AppState>('app');
@@ -14,13 +18,31 @@ export const selectIsLoadingFestival = createSelector(
   (state) => state.isLoadingFestival
 );
 
-export const selectRecordsInTreeForm = createSelector(
+export const selectFestivalFlattenedRecord = createSelector(
   selectAppState,
-  (state): MusicRecordVisualizerViewModel[] => {
+  (state): BandRecordFestivalFlattenedModel[] | undefined => {
+    if (state && state.festivals) {
+      return festivalResponseToFlattenedDataMapper(state.festivals);
+    }
+    return undefined;
+  }
+);
+
+export const selectRecordBandFestivalDictionary = createSelector(
+  selectFestivalFlattenedRecord,
+  (state): BandRecordFestivalDictionaryModel | undefined => {
     if (state) {
-      const { festivals = {}, bands = {}, records = {} } = state;
-      let data = musicRecordVisualizerMapper(festivals, bands, records);
-      return data;
+      return flattenedDataToDictionaryModelMapper(state);
+    }
+    return undefined;
+  }
+);
+
+export const selectRecordsInTreeForm = createSelector(
+  selectRecordBandFestivalDictionary,
+  (records): MusicRecordVisualizerViewModel[] => {
+    if (records) {
+      return bandRecordFestivalDictionaryToViewModel(records);
     }
     return [];
   }

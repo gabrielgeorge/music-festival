@@ -1,10 +1,11 @@
-import { TestBed, inject } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { Observable } from 'rxjs';
-import { DataService } from 'src/app/services/data.service';
+import { DataService } from '../../services/data.service';
 import { AppEffects } from './app.effects';
 import { TestScheduler } from 'rxjs/testing';
 import * as appActions from '../actions/app.actions';
+import { FestivalResponseModel } from '../../models/festival-response.model';
 
 describe('AppEffects', () => {
   let actions$: Observable<any>;
@@ -39,7 +40,7 @@ describe('AppEffects', () => {
 
   it('should handle getFestivals$ correctly', () => {
     // arrange
-    const mockResponse: any[] = [];
+    const mockResponse: FestivalResponseModel[] = [];
 
     // act
     testScheduler.run(({ cold, hot, expectObservable }) => {
@@ -52,11 +53,7 @@ describe('AppEffects', () => {
 
       // assert
       expectObservable(effects.getFestivals$).toBe('---c', {
-        c: appActions.getFestivalsSuccess({
-          festivals: {},
-          bands: {},
-          records: {},
-        }),
+        c: appActions.getFestivalsSuccess({ response: mockResponse }),
       });
     });
   });

@@ -1,11 +1,10 @@
 import { createAction, props } from '@ngrx/store';
-import { Bands, Festivals, Records } from 'src/app/models/record.model';
-
+import { FestivalResponseModel } from '../../models/festival-response.model';
 export const getFestivals = createAction('[App] Get festivals');
 
 export const getFestivalsSuccess = createAction(
   '[App] Get festivals success',
-  props<{ festivals: Festivals, bands: Bands, records: Records }>()
+  props<{ response: FestivalResponseModel[] }>()
 );
 
 export const getFestivalsFailure = createAction('[App] Get festivals failure');

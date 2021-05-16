@@ -1,19 +1,14 @@
 import { Action, createReducer, on } from '@ngrx/store';
-import { FestivalResponseModel } from 'src/app/models/festival-response.model';
-import { Bands, Festivals, Records } from 'src/app/models/record.model';
+import { FestivalResponseModel } from '../../models/festival-response.model';
 import * as appActions from '../actions/app.actions';
 
 export interface AppState {
-  festivals: Festivals;
-  bands: Bands;
-  records: Records;
+  festivals: FestivalResponseModel[];
   isLoadingFestival: boolean;
 }
 
 export const initialState: AppState = {
-  festivals: {},
-  bands: {},
-  records: {},
+  festivals: [],
   isLoadingFestival: false,
 };
 
@@ -24,15 +19,9 @@ const appReducer = createReducer(
     isLoadingFestival: true,
   })),
   on(appActions.getFestivalsSuccess, (state, action) => {
-    const festivals = { ...state.festivals, ...action.festivals };
-    const records = { ...state.records, ...action.records };
-    const bands = { ...state.bands, ...action.bands };
-
     return {
       ...state,
-      bands,
-      festivals,
-      records,
+      festivals: action.response,
       isLoadingFestival: false,
     };
   }),
