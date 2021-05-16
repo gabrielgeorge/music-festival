@@ -13,25 +13,13 @@ export class DataService {
       .get<FestivalResponseModel[]>(`/api/v1/festivals`)
       .pipe(
         map((festivals) => {
-          if (!festivals || !festivals.length) {
-            return [];
-          }
-          return festivals.map((festival) => {
-            const bands = [...festival.bands];
-
-            festival.name = festival.name ?? '';
-            festival.bands = [];
-
-            if (bands && bands.length) {
-              festival.bands = bands.map((band: any) => ({
-                ...band,
-                name: band.name ?? '',
-                recordLabel: band?.recordLabel ? band.recordLabel : '',
-              }));
-            }
-
-            return festival;
-          });
+          return (festivals ?? []).map((festival) => ({
+            name: festival.name ?? '',
+            bands: (festival?.bands ?? []).map((band) => ({
+              name: band.name ?? '',
+              recordLabel: band?.recordLabel ? band.recordLabel : '',
+            }))
+          }));
         })
       );
   }
